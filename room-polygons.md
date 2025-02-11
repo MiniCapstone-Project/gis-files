@@ -5,3 +5,6 @@ strange pupup when exporting: left as defeault
 result Hall-9.dxf
 open in qgis
 leave gis prompt as default
+floor plan is in the ocean and small
+georeference - save as geojson (regular not "newline delimited")
+ignore invalid features
