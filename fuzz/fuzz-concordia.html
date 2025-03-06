@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Concordia Building Search</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    input { padding: 8px; width: 300px; margin-bottom: 20px; }
+    ul { list-style-type: none; padding: 0; }
+    li { padding: 5px 0; border-bottom: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <h1>Concordia Building Search</h1>
+  <input type="text" id="searchInput" placeholder="Search for a building..." />
+  <ul id="results"></ul>
+
+  <!-- Include Fuse.js from a CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <script>
+    // Define Concordia building data with synonyms.
+    const buildings = [
+      {
+        id: 1,
+        synonyms: [
+          'John Molson School of Business Building',
+          'John Molson',
+          'JMSB',
+          'Business Building'
+        ]
+      },
+      {
+        id: 2,
+        synonyms: [
+          'Henry F. Hall Building',
+          'Henry Hall',
+          'HF Hall',
+          'Hall Building'
+        ]
+      },
+      {
+        id: 3,
+        synonyms: [
+          'R. Howard Webster Library',
+          'Webster Library',
+          'Library'
+        ]
+      },
+      {
+        id: 4,
+        synonyms: [
+          'Guy-Concordia Student Centre',
+          'Guy-Concordia',
+          'Student Centre',
+          'Guy-Concordia Centre'
+        ]
+      },
+      {
+        id: 5,
+        synonyms: [
+          'Engineering and Computer Science Building',
+          'Engineering Building',
+          'Computer Science',
+          'Eng Building'
+        ]
+      },
+      {
+        id: 6,
+        synonyms: [
+          'Concordia Arts & Science Building',
+          'Arts & Science',
+          'A&S Building',
+          'Science Building'
+        ]
+      }
+    ];
+
+    // Fuse.js configuration options.
+    const fuseOptions = {
+      includeScore: true,
+      keys: ['synonyms'],
+      threshold: 0.4 // Adjust for desired fuzziness (0 for exact match; higher for more tolerance).
+    };
+
+    // Initialize Fuse with the building data.
+    const fuse = new Fuse(buildings, fuseOptions);
+
+    // DOM element references.
+    const searchInput = document.getElementById('searchInput');
+    const resultsList = document.getElementById('results');
+
+    // Function to display search results.
+    function displayResults(results) {
+      resultsList.innerHTML = '';
+      if (results.length === 0) {
+        resultsList.innerHTML = '<li>No results found</li>';
+        return;
+      }
+      results.forEach(result => {
+        const li = document.createElement('li');
+        // Display the primary (first) synonym.
+        li.textContent = result.item.synonyms[0];
+        resultsList.appendChild(li);
+      });
+    }
+
+    // Listen for input changes and update results.
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value;
+      if (query.trim() === '') {
+        // If query is empty, display all buildings.
+        displayResults(buildings.map(building => ({ item: building })));
+      } else {
+        const results = fuse.search(query);
+        displayResults(results);
+      }
+    });
+
+    // Display all buildings on initial load.
+    displayResults(buildings.map(building => ({ item: building })));
+  </script>
+</body>
+</html>

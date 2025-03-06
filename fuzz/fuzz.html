@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fuzzy Search Demo</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    input { padding: 8px; width: 300px; margin-bottom: 20px; }
+    ul { list-style-type: none; padding: 0; }
+    li { padding: 5px 0; border-bottom: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <h1>Fuzzy Search Demo</h1>
+  <input type="text" id="searchInput" placeholder="Search for a language..." />
+  <ul id="results"></ul>
+
+  <!-- Include Fuse.js from a CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <script>
+    // Define the data: Each entity has an array of synonyms.
+    const entities = [
+      { id: 1, synonyms: ['JavaScript', 'js', 'ECMAScript'] },
+      { id: 2, synonyms: ['TypeScript', 'ts', 'typescript language'] },
+      { id: 3, synonyms: ['Python', 'py'] },
+      // You can add more entities as needed.
+    ];
+
+    // Fuse.js options: Set keys and threshold for fuzzy matching.
+    const fuseOptions = {
+      includeScore: true,
+      keys: ['synonyms'],
+      threshold: 0.4 // 0: exact match; higher values allow more fuzziness.
+    };
+
+    // Initialize Fuse with the entities and options.
+    const fuse = new Fuse(entities, fuseOptions);
+
+    // Get references to the DOM elements.
+    const searchInput = document.getElementById('searchInput');
+    const resultsList = document.getElementById('results');
+
+    // Function to display search results.
+    function displayResults(results) {
+      resultsList.innerHTML = '';
+      if (results.length === 0) {
+        resultsList.innerHTML = '<li>No results found</li>';
+        return;
+      }
+      results.forEach(result => {
+        const li = document.createElement('li');
+        li.textContent = result.item.synonyms.join(', ');
+        resultsList.appendChild(li);
+      });
+    }
+
+    // Update search results as the user types.
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value;
+      if (query.trim() === '') {
+        // If the search query is empty, display all entities.
+        displayResults(entities.map(entity => ({ item: entity })));
+      } else {
+        const results = fuse.search(query);
+        displayResults(results);
+      }
+    });
+
+    // Display all entities by default.
+    displayResults(entities.map(entity => ({ item: entity })));
+  </script>
+</body>
+</html>
