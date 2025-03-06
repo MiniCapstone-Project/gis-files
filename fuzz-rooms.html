@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Concordia Rooms Search</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    input { padding: 8px; width: 300px; margin-bottom: 20px; }
+    ul { list-style-type: none; padding: 0; }
+    li { padding: 5px 0; border-bottom: 1px solid #ddd; }
+  </style>
+</head>
+<body>
+  <h1>Concordia Rooms Search</h1>
+  <input type="text" id="searchInput" placeholder="Search for a room..." />
+  <ul id="results"></ul>
+
+  <!-- Include Fuse.js from a CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
+  <script>
+    // Define an array of room objects from various Concordia buildings.
+    const rooms = [
+      {
+        id: 1,
+        synonyms: [
+          "JMSB 101",
+          "John Molson 101",
+          "Business Building 101",
+          "Room 101 JMSB"
+        ]
+      },
+      {
+        id: 2,
+        synonyms: [
+          "JMSB 203",
+          "John Molson 203",
+          "Business Building 203",
+          "Room 203 JMSB"
+        ]
+      },
+      {
+        id: 3,
+        synonyms: [
+          "JMSB 305",
+          "John Molson 305",
+          "Business Building 305",
+          "Room 305 JMSB"
+        ]
+      },
+      {
+        id: 4,
+        synonyms: [
+          "HF Hall 202",
+          "Henry F. Hall 202",
+          "Room 202 Henry",
+          "HF 202"
+        ]
+      },
+      {
+        id: 5,
+        synonyms: [
+          "HF Hall 310",
+          "Henry F. Hall 310",
+          "Room 310 Henry",
+          "HF 310"
+        ]
+      },
+      {
+        id: 6,
+        synonyms: [
+          "Webster A1",
+          "R. Howard Webster A1",
+          "Library A1",
+          "Room A1 Webster"
+        ]
+      },
+      {
+        id: 7,
+        synonyms: [
+          "Webster B2",
+          "R. Howard Webster B2",
+          "Library B2",
+          "Room B2 Webster"
+        ]
+      },
+      {
+        id: 8,
+        synonyms: [
+          "Guy-Concordia 110",
+          "Student Centre 110",
+          "GCSC 110",
+          "Room 110 Guy-Concordia"
+        ]
+      },
+      {
+        id: 9,
+        synonyms: [
+          "Engineering 303",
+          "Engineering and CS 303",
+          "Comp Sci 303",
+          "Room 303 Eng"
+        ]
+      },
+      {
+        id: 10,
+        synonyms: [
+          "Engineering 404",
+          "Engineering and CS 404",
+          "Comp Sci 404",
+          "Room 404 Eng"
+        ]
+      },
+      {
+        id: 11,
+        synonyms: [
+          "A&S 105",
+          "Arts & Science 105",
+          "Science Building 105",
+          "Room 105 A&S"
+        ]
+      },
+      {
+        id: 12,
+        synonyms: [
+          "A&S 210",
+          "Arts & Science 210",
+          "Science Building 210",
+          "Room 210 A&S"
+        ]
+      }
+    ];
+
+    // Fuse.js configuration for fuzzy searching on the 'synonyms' field.
+    const fuseOptions = {
+      includeScore: true,
+      keys: ['synonyms'],
+      threshold: 0.4 // Adjust for how fuzzy the search should be.
+    };
+
+    // Initialize Fuse with our room data.
+    const fuse = new Fuse(rooms, fuseOptions);
+
+    // Get DOM element references.
+    const searchInput = document.getElementById('searchInput');
+    const resultsList = document.getElementById('results');
+
+    // Function to display search results.
+    function displayResults(results) {
+      resultsList.innerHTML = '';
+      if (results.length === 0) {
+        resultsList.innerHTML = '<li>No results found</li>';
+        return;
+      }
+      results.forEach(result => {
+        const li = document.createElement('li');
+        // Display the primary (first) synonym for each room.
+        li.textContent = result.item.synonyms[0];
+        resultsList.appendChild(li);
+      });
+    }
+
+    // Update displayed results when user input changes.
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value;
+      if (query.trim() === '') {
+        // If the search box is empty, show all rooms.
+        displayResults(rooms.map(room => ({ item: room })));
+      } else {
+        const results = fuse.search(query);
+        displayResults(results);
+      }
+    });
+
+    // Display all rooms by default.
+    displayResults(rooms.map(room => ({ item: room })));
+  </script>
+</body>
+</html>
