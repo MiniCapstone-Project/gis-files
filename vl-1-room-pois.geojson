@@ -1,0 +1,12 @@
+{
+"type": "FeatureCollection",
+"name": "vl-1-room-pois",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "fid": 1, "id": "VL102", "Code": "VL102", "Type": "Class" }, "geometry": { "type": "Point", "coordinates": [ -73.638020136529164, 45.458988177048354 ] } },
+{ "type": "Feature", "properties": { "fid": 2, "id": "vl1EXIT", "Code": "vl1EXIT", "Type": "EXIT" }, "geometry": { "type": "Point", "coordinates": [ -73.63790920684157, 45.45913499327861 ] } },
+{ "type": "Feature", "properties": { "fid": 3, "id": "VL128", "Code": "VL128", "Type": "Class" }, "geometry": { "type": "Point", "coordinates": [ -73.638482201380384, 45.458866318689793 ] } },
+{ "type": "Feature", "properties": { "fid": 4, "id": "VL121", "Code": "VL121", "Type": "Class" }, "geometry": { "type": "Point", "coordinates": [ -73.638807709692344, 45.458835693810329 ] } },
+{ "type": "Feature", "properties": { "fid": 4, "id": "vl1ENTR", "Code": "vl1ENTR", "Type": "Entrance" }, "geometry": { "type": "Point", "coordinates": [ -73.638932077999897, 45.459086807130923 ] } }
+]
+}
